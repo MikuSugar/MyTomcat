@@ -13,6 +13,7 @@ import java.net.Socket;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
 
+//服务类
 public class Server extends Thread {
     private final static Logger LOGGER= LogManager.getLogger(Server.class);
     private String WEBROOT;

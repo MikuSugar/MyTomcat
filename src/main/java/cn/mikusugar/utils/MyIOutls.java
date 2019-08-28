@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 
+//IO工具类
 public class MyIOutls {
     private final static Logger LOGGER= LogManager.getLogger(MyIOutls.class);
 

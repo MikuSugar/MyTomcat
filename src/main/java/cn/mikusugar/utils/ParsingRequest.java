@@ -8,6 +8,9 @@ import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 处理请求类
+ */
 public class ParsingRequest {
     private final static Logger LOGGER= LogManager.getLogger(ParsingRequest.class);
     public static Map<String,String> retrunMap(String info)
