@@ -1,5 +1,6 @@
 package cn.mikusugar.server;
 
+import cn.mikusugar.dynamic.GetScheduling;
 import cn.mikusugar.status.HttpStatus;
 import cn.mikusugar.utils.MyIOutls;
 import cn.mikusugar.utils.ParsingRequest;
@@ -13,7 +14,9 @@ import java.net.Socket;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
 
-//服务类
+/**
+ * 服务器调度类
+ */
 public class Server extends Thread {
     private final static Logger LOGGER= LogManager.getLogger(Server.class);
     private String WEBROOT;
@@ -30,18 +33,31 @@ public class Server extends Thread {
         try {
             Map<String,String> request= ParsingRequest.retrunMap(MyIOutls.getString(socket.getInputStream()));
             if(request==null) return;
-            File file=new File(WEBROOT+request.get("GET"));
-            if(file.isFile())
+            boolean is404=false;
+            if(request.containsKey("GET"))
             {
-                LOGGER.info(socket+" GET "+file.toString());
-                OutputStream out = socket.getOutputStream();
-                out.write(HttpStatus.OK.getBytes());
-                out.write("Content-type:text/html\n\n".getBytes());
-                MyIOutls.send(file,out);
+                String get = request.get("GET");
+                if(get.startsWith("/dynamic"))
+                {
+                    is404=!new GetScheduling(request,socket).start();
+                }
+                else
+                {
+                    File file=new File(WEBROOT+get);
+                    if(file.isFile())
+                    {
+                        LOGGER.info(socket+" GET "+file.toString());
+                        OutputStream out = socket.getOutputStream();
+                        out.write(HttpStatus.OK.getBytes());
+                        out.write("Content-type:text/html\n\n".getBytes());
+                        MyIOutls.send(file,out);
+                    }
+                    else is404=true;
+                }
             }
-            else
+            if(is404)
             {
-                LOGGER.warn(socket.toString()+"404");
+                LOGGER.warn(socket.toString()+"404"+request);
                 OutputStream out = socket.getOutputStream();
                 out.write(HttpStatus.NO_FOUND.getBytes());
             }
