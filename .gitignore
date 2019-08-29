@@ -48,3 +48,8 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+#Other
+.idea/
+MyTomcat.iml
+target/
