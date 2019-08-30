@@ -2,6 +2,7 @@ package cn.mikusugar.server;
 
 import cn.mikusugar.dynamic.GetScheduling;
 import cn.mikusugar.dynamic.PostScheduling;
+import cn.mikusugar.utils.ContentType;
 import cn.mikusugar.status.HttpStatus;
 import cn.mikusugar.utils.MyIOutls;
 import cn.mikusugar.utils.ParsingRequest;
@@ -50,7 +51,7 @@ public class Server extends Thread {
                         LOGGER.info(socket+" GET "+file.toString());
                         OutputStream out = socket.getOutputStream();
                         out.write(HttpStatus.OK.getBytes());
-                        out.write("Content-type:text/html\n\n".getBytes());
+                        out.write(ContentType.getType().findBytesByPath(get));
                         MyIOutls.send(file,out);
                     }
                     else is404=true;
@@ -67,6 +68,7 @@ public class Server extends Thread {
                         out.write(HttpStatus.OK.getBytes());
                         return;
                     }
+                    LOGGER.info(socket+" POST "+path);
                     is404=!new PostScheduling(request,socket).start();
                 }
                 else is404=true;
