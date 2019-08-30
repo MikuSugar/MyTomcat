@@ -1,6 +1,7 @@
 package cn.mikusugar.server;
 
 import cn.mikusugar.dynamic.GetScheduling;
+import cn.mikusugar.dynamic.PostScheduling;
 import cn.mikusugar.status.HttpStatus;
 import cn.mikusugar.utils.MyIOutls;
 import cn.mikusugar.utils.ParsingRequest;
@@ -54,6 +55,21 @@ public class Server extends Thread {
                     }
                     else is404=true;
                 }
+            }
+            else if(request.containsKey("POST"))
+            {
+                String path=request.get("POST");
+                if(path.startsWith("/dynamic"))
+                {
+                    if(request.getOrDefault("postvalues","").isEmpty())
+                    {
+                        OutputStream out=socket.getOutputStream();
+                        out.write(HttpStatus.OK.getBytes());
+                        return;
+                    }
+                    is404=!new PostScheduling(request,socket).start();
+                }
+                else is404=true;
             }
             if(is404)
             {

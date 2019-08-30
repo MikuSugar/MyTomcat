@@ -54,7 +54,7 @@ public class Start{
             {
                 Socket socket = server.accept();
                 conNum.acquire();
-                LOGGER.info("服务器负载"+((ConcurrentNumber-conNum.availablePermits())*100/ConcurrentNumber)+"%\n"+socket+" 连接成功");
+                LOGGER.info("服务器负载"+((ConcurrentNumber-conNum.availablePermits())*100/ConcurrentNumber)+"%  "+socket+" 连接成功");
                 new Server(socket,WEBROOT,conNum).start();
             }
         } catch (IOException e) {
